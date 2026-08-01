@@ -1,81 +1,861 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-<style>
+    <meta charset="UTF-8">
 
-body {
-  font-size: 100%;
-   
-}
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-h1 {
-  font-size: 3em;
-   style=background-color:DodgerBlue;
-}
+    <title>MOSSI | Mathematics of Sea Ice and Ice Sheets Workshops</title>
 
-h2 {
-  font-size: 2.2em;
-style=background-color:DodgerBlue;
-}
+    <meta name="description"
+          content="The International Workshop on Mathematics of Sea Ice and Ice Sheets (MOSSI) brings together researchers working on mathematical modelling, sea ice, ice sheets, hydroelasticity and cryospheric dynamics.">
 
-p {
-  font-size:1.5em;
-  letter-spacing: 0.08em;
-  style=background-color:DodgerBlue;
-}
+    <meta name="robots" content="index, follow">
 
-</style>
+    <link rel="canonical"
+          href="https://sboral1212.github.io/">
+
+    <style>
+        :root {
+            --navy: #022f49;
+            --deep-blue: #075985;
+            --blue: #0284c7;
+            --ice-blue: #38bdf8;
+            --pale-blue: #eaf8ff;
+            --snow: #f6fbfe;
+            --white: #ffffff;
+            --text: #294552;
+            --muted: #607985;
+            --accent: #f97345;
+            --border: #cde7f2;
+            --shadow: 0 12px 30px rgba(2, 47, 73, 0.13);
+        }
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(
+                    circle at 10% 15%,
+                    rgba(56, 189, 248, 0.12),
+                    transparent 25%
+                ),
+                var(--snow);
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        /* =====================================================
+           HERO
+        ====================================================== */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            min-height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 75px 22px 110px;
+            color: var(--white);
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(2, 36, 57, 0.99),
+                    rgba(2, 132, 199, 0.92)
+                );
+            text-align: center;
+        }
+
+        .hero::before {
+            content: "∇²Φ   ∇⁴w   f̂(k) = ∫ f(x)e⁻ⁱᵏˣ dx";
+            position: absolute;
+            top: 25px;
+            left: 3%;
+            color: rgba(255, 255, 255, 0.07);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(1.6rem, 6vw, 5rem);
+            font-style: italic;
+            white-space: nowrap;
+            transform: rotate(-4deg);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            left: -5%;
+            right: -5%;
+            bottom: -85px;
+            height: 145px;
+            background: var(--snow);
+            transform: rotate(-2.5deg);
+        }
+
+        .ice-shape {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            transform: rotate(35deg);
+        }
+
+        .ice-shape.left {
+            left: -125px;
+            bottom: 25px;
+        }
+
+        .ice-shape.right {
+            top: -130px;
+            right: -90px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+        }
+
+        .hero-label {
+            display: inline-block;
+            margin-bottom: 17px;
+            padding: 8px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.09);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(2.6rem, 6vw, 4.9rem);
+            line-height: 1.08;
+            letter-spacing: -0.025em;
+            text-shadow: 0 6px 22px rgba(0, 0, 0, 0.3);
+        }
+
+        .mossi-name {
+            display: block;
+            margin-top: 13px;
+            color: #bdeeff;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 0.43em;
+            letter-spacing: 0.07em;
+        }
+
+        .hero-description {
+            max-width: 800px;
+            margin: 21px auto 0;
+            color: #e2f7ff;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+        }
+
+        /* =====================================================
+           GENERAL LAYOUT
+        ====================================================== */
+
+        main {
+            position: relative;
+            z-index: 4;
+            width: min(1100px, calc(100% - 30px));
+            margin: -50px auto 45px;
+        }
+
+        section {
+            margin-bottom: 25px;
+            padding: 35px;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow);
+        }
+
+        .section-heading {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .section-label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--blue);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            margin: 0;
+            color: var(--navy);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.45rem);
+            line-height: 1.2;
+        }
+
+        .heading-line {
+            width: 66px;
+            height: 3px;
+            margin: 12px auto 0;
+            border-radius: 5px;
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--ice-blue),
+                    var(--accent)
+                );
+        }
+
+        /* =====================================================
+           UPCOMING MOSSI 2026
+        ====================================================== */
+
+        .upcoming {
+            position: relative;
+            overflow: hidden;
+            color: var(--white);
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--navy),
+                    var(--blue)
+                );
+        }
+
+        .upcoming::after {
+            content: "2026";
+            position: absolute;
+            right: 18px;
+            bottom: -45px;
+            color: rgba(255, 255, 255, 0.06);
+            font-size: 9rem;
+            font-weight: 800;
+        }
+
+        .upcoming-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .upcoming .section-label {
+            color: #bdeeff;
+        }
+
+        .upcoming h2 {
+            color: var(--white);
+            text-align: left;
+        }
+
+        .upcoming p {
+            max-width: 680px;
+            margin: 15px 0 18px;
+            color: #e0f6ff;
+            font-size: 1rem;
+        }
+
+        .event-facts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .event-fact {
+            padding: 8px 13px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.09);
+            font-size: 0.9rem;
+        }
+
+        .upcoming-action {
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.10);
+            text-align: center;
+        }
+
+        .primary-button {
+            display: inline-block;
+            padding: 13px 24px;
+            border-radius: 8px;
+            color: var(--white);
+            background: var(--accent);
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(249, 115, 69, 0.3);
+            transition: 0.25s ease;
+        }
+
+        .primary-button:hover {
+            background: #e85f34;
+            transform: translateY(-2px);
+        }
+
+        .upcoming-action p {
+            margin: 16px 0 0;
+            color: #dff5ff;
+            font-size: 0.86rem;
+        }
+
+        /* =====================================================
+           WORKSHOP SERIES
+        ====================================================== */
+
+        .workshop-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .workshop-card {
+            position: relative;
+            overflow: hidden;
+            padding: 27px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: linear-gradient(145deg, #ffffff, #eefaff);
+        }
+
+        .workshop-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--ice-blue),
+                    var(--accent)
+                );
+        }
+
+        .workshop-year {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: var(--blue);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .workshop-card h3 {
+            margin: 0 0 9px;
+            color: var(--navy);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.45rem;
+        }
+
+        .workshop-card p {
+            margin: 0 0 17px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .secondary-button {
+            display: inline-block;
+            padding: 9px 17px;
+            border: 1px solid var(--blue);
+            border-radius: 7px;
+            color: var(--blue);
+            background: var(--white);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.2s ease;
+        }
+
+        .secondary-button:hover {
+            color: var(--white);
+            background: var(--blue);
+        }
+
+        /* =====================================================
+           MOSSI 2023 ARCHIVE
+        ====================================================== */
+
+        .archive-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 23px;
+        }
+
+        .archive-box {
+            padding: 23px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: #f8fcfe;
+        }
+
+        .archive-box h3 {
+            margin: 0 0 11px;
+            color: var(--navy);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.3rem;
+        }
+
+        .archive-box p {
+            margin: 7px 0;
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .archive-box a {
+            color: var(--blue);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .archive-box a:hover {
+            text-decoration: underline;
+        }
+
+        .presenter-list {
+            margin: 0;
+            padding-left: 21px;
+        }
+
+        .presenter-list li {
+            margin-bottom: 10px;
+            color: var(--muted);
+            font-size: 0.93rem;
+        }
+
+        .organisers {
+            margin-top: 22px;
+            padding: 21px;
+            border-radius: 13px;
+            color: var(--white);
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--deep-blue),
+                    var(--blue)
+                );
+        }
+
+        .organisers h3 {
+            margin: 0 0 12px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.35rem;
+        }
+
+        .organisers p {
+            margin: 7px 0;
+            color: #e4f7ff;
+            font-size: 0.94rem;
+        }
+
+        /* =====================================================
+           FOOTER
+        ====================================================== */
+
+        footer {
+            padding: 25px 16px;
+            color: #dff6ff;
+            background: var(--navy);
+            text-align: center;
+        }
+
+        footer p {
+            margin: 4px 0;
+            font-size: 0.9rem;
+        }
+
+        footer strong {
+            color: var(--white);
+        }
+
+        footer a {
+            color: #bdeeff;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        /* =====================================================
+           RESPONSIVE DESIGN
+        ====================================================== */
+
+        @media (max-width: 800px) {
+            .upcoming-grid,
+            .workshop-grid,
+            .archive-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .upcoming h2 {
+                text-align: center;
+            }
+
+            .upcoming p {
+                text-align: center;
+            }
+
+            .event-facts {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero {
+                min-height: 440px;
+                padding: 60px 18px 95px;
+            }
+
+            main {
+                width: min(100% - 18px, 1100px);
+                margin-top: -38px;
+            }
+
+            section {
+                padding: 25px 17px;
+                border-radius: 13px;
+            }
+
+            .upcoming-action {
+                padding: 20px 15px;
+            }
+
+            .primary-button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
-<style>
-  
-h1 {
-  background-image: url('https://tse2-mm.cn.bing.net/th/id/OIP-C.BNosKmIFkYlsckzBL5T_1QHaFj?pid=ImgDet&rs=1'); 
-}
-</style>
-  
 <body>
-  <header class="header">
-    <h3 style="color:	hsl(195, 10%, 50%)"> <center> International Workshop on </h3>
-    <h1 style="color:rgb(600,150,20)" > <center> Mathematics of Sea Ice and Ice Sheets <br>  (MOSSI) - 2023 </h1>
+
+    <!-- =====================================================
+         MOSSI SERIES HEADER
+    ====================================================== -->
+
+    <header class="hero">
+
+        <div class="ice-shape left"></div>
+        <div class="ice-shape right"></div>
+
+        <div class="hero-content">
+
+            <span class="hero-label">
+                International Workshop Series
+            </span>
+
+            <h1>
+                Mathematics of Sea Ice<br>
+                and Ice Sheets
+
+                <span class="mossi-name">
+                    MOSSI Workshops
+                </span>
+            </h1>
+
+            <p class="hero-description">
+                An international workshop series devoted to mathematical
+                modelling, analysis and computation in sea ice, ice sheets,
+                hydroelasticity and cryospheric dynamics.
+            </p>
+
+        </div>
+
     </header>
-  <main>
-    <div class="intro">
-      <h2 style="color:#0066FF"><center>About the Workshop</h2>
-      <p>Date: November 29-30, 2023 </p>
-      <p>Format - Online presentation via ZOOM </p>
-      <p>Timing of presentation - twenty minutes followed by five minutes discussion and five minutes change over </p>
-      </div>
-          <div class="intro">
-      <h2 style="color:#0066FF"><center>Workshop schedule & accepted abstracts</h2>
-      <p>Please click <a style="color:DodgerBlue" href="https://sboral1212.github.io/abstract/">here</a></p>
-    </div>
-          <div class="intro">
-      <h2 style="color:#0066FF"><center> Youtube Video link</h2>
-     <p> Please  <a style ="color:DodgerBlue" href = "https://www.youtube.com/playlist?list=PLbZAJ2q5cE24dVpf0L8bA-z0q6U0SesAx">click here  </a> </p>
-    </div>
-<div class="intro"> 
-  <h2 style="color:#0066FF"> <center> Instructions for presenters</center> </h2>
- <p>For your convenience, here are some key points to consider for seamless participation:</p>
-<ol>
-<li> <p>Screen Sharing: Utilize the upward arrow option located at the bottom middle of the Zoom platform to share your screen during the sessions.</p></li>
 
-<li><p>Presentation Guidelines: Kindly share your entire screen during your presentation to mitigate any potential technical difficulties.</p></li>
-  <li><p> Hiding floating window:  After sharing your entire screen, you may have a top floating window in ZOOM platform, which you can hide by pressing ctrl+alt+shift+H.</p></li> 
+    <main>
 
-<li><p>Camera Usage: Please keep your camera turned on throughout the duration of the presentation for a more engaging and interactive experience.</p></li>
+        <!-- =====================================================
+             UPCOMING MOSSI 2026
+        ====================================================== -->
 
-<li><p>Recording Policy: In an effort to document the valuable content presented, we have decided to record each session. If you have reservations about having your presentation recorded, kindly inform us before commencing your presentation.</p></li>
-    <div class="intro">
-      <h2 style="color:#0066FF"><center> Workshop organizers</h2>
-      <ol>
-        <li><p> Dr Susam Boral, Harbin Engineering University, Harbin, China </p> </li>
-        <li> <p> Professor Mike Meylan, University of Newcastle, Newcastle, Australia </p> </li>
-      </ol>
-    </div>
-  <main>
+        <section class="upcoming">
+
+            <div class="upcoming-grid">
+
+                <div>
+
+                    <span class="section-label">
+                        Upcoming Workshop
+                    </span>
+
+                    <h2>
+                        MOSSI 2026
+                    </h2>
+
+                    <p>
+                        The next International Workshop on Mathematics of Sea
+                        Ice and Ice Sheets will be held online on
+                        12–13 November 2026. Abstract submissions are now open.
+                    </p>
+
+                    <div class="event-facts">
+
+                        <span class="event-fact">
+                            12–13 November 2026
+                        </span>
+
+                        <span class="event-fact">
+                            Online Workshop
+                        </span>
+
+                        <span class="event-fact">
+                            Abstract deadline: 31 October 2026
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="upcoming-action">
+
+                    <a class="primary-button"
+                       href="https://sboral1212.github.io/MOSSI_2026/">
+                        Visit the MOSSI 2026 Website
+                    </a>
+
+                    <p>
+                        Workshop information, research fields and abstract
+                        submission details
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =====================================================
+             PREVIOUS WORKSHOPS
+        ====================================================== -->
+
+        <section>
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    MOSSI Series
+                </span>
+
+                <h2>
+                    Previous Workshops
+                </h2>
+
+                <div class="heading-line"></div>
+
+            </div>
+
+            <div class="workshop-grid">
+
+                <article class="workshop-card">
+
+                    <span class="workshop-year">
+                        Previous Workshop
+                    </span>
+
+                    <h3>
+                        MOSSI 2024
+                    </h3>
+
+                    <p>
+                        International Workshop on Mathematics of Sea Ice and
+                        Ice Sheets, including workshop information, programme
+                        details and accepted abstracts.
+                    </p>
+
+                    <a class="secondary-button"
+                       href="https://sboral1212.github.io/MOSSI2024/">
+                        Visit MOSSI 2024
+                    </a>
+
+                </article>
+
+                <article class="workshop-card">
+
+                    <span class="workshop-year">
+                        Previous Workshop
+                    </span>
+
+                    <h3>
+                        MOSSI 2023
+                    </h3>
+
+                    <p>
+                        The 2023 workshop was held online on
+                        29–30 November 2023, with presentations on mathematical
+                        problems involving sea ice and ice sheets.
+                    </p>
+
+                    <a class="secondary-button"
+                       href="#mossi-2023">
+                        View MOSSI 2023 Archive
+                    </a>
+
+                </article>
+
+            </div>
+
+        </section>
+
+        <!-- =====================================================
+             MOSSI 2023 ARCHIVE
+        ====================================================== -->
+
+        <section id="mossi-2023">
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    Workshop Archive
+                </span>
+
+                <h2>
+                    MOSSI 2023
+                </h2>
+
+                <div class="heading-line"></div>
+
+            </div>
+
+            <div class="archive-grid">
+
+                <div class="archive-box">
+
+                    <h3>
+                        Workshop Information
+                    </h3>
+
+                    <p>
+                        <strong>Date:</strong>
+                        29–30 November 2023
+                    </p>
+
+                    <p>
+                        <strong>Format:</strong>
+                        Online presentations via Zoom
+                    </p>
+
+                    <p>
+                        <strong>Presentation time:</strong>
+                        20 minutes, followed by 5 minutes of discussion and
+                        5 minutes for changeover
+                    </p>
+
+                    <p>
+                        <a href="https://sboral1212.github.io/abstract/">
+                            Workshop schedule and accepted abstracts
+                        </a>
+                    </p>
+
+                    <p>
+                        <a href="https://www.youtube.com/playlist?list=PLbZAJ2q5cE24dVpf0L8bA-z0q6U0SesAx">
+                            MOSSI 2023 YouTube playlist
+                        </a>
+                    </p>
+
+                </div>
+
+                <div class="archive-box">
+
+                    <h3>
+                        Instructions for Presenters
+                    </h3>
+
+                    <ol class="presenter-list">
+
+                        <li>
+                            Use the screen-sharing option at the bottom of the
+                            Zoom window to share your presentation.
+                        </li>
+
+                        <li>
+                            Share your entire screen to reduce potential
+                            technical difficulties.
+                        </li>
+
+                        <li>
+                            The Zoom floating window can be hidden using
+                            <strong>Ctrl + Alt + Shift + H</strong>.
+                        </li>
+
+                        <li>
+                            Keep your camera switched on during the presentation
+                            to support an engaging discussion.
+                        </li>
+
+                        <li>
+                            Sessions may be recorded. Presenters who do not wish
+                            to be recorded should inform the organisers before
+                            their presentation.
+                        </li>
+
+                    </ol>
+
+                </div>
+
+            </div>
+
+            <div class="organisers">
+
+                <h3>
+                    MOSSI 2023 Organisers
+                </h3>
+
+                <p>
+                    <strong>Dr Susam Boral</strong> —
+                    Harbin Engineering University, Harbin, China
+                </p>
+
+                <p>
+                    <strong>Professor Mike Meylan</strong> —
+                    University of Newcastle, Newcastle, Australia
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <p>
+            <strong>
+                Mathematics of Sea Ice and Ice Sheets
+            </strong>
+        </p>
+
+        <p>
+            International MOSSI Workshop Series
+        </p>
+
+        <p>
+            Upcoming workshop:
+            <a href="https://sboral1212.github.io/MOSSI_2026/">
+                MOSSI 2026
+            </a>
+        </p>
+
+    </footer>
+
 </body>
-</html>
 
+</html>
